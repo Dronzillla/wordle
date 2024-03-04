@@ -1,4 +1,3 @@
-from colorama import init
 from termcolor import colored
 from random_words import RandomWords
 import re
@@ -24,7 +23,6 @@ class WordleGame:
     def show_grid(self) -> None:
         columns = 5
         rows = 6
-        init()
         for r in range(rows):
             correct = 0
             for c in range(columns):
@@ -60,7 +58,7 @@ class WordleGame:
         while True:
             word = input("English word: ")
             if self.__is_word_len5(word):
-                self.guesses.append(word)
+                self.guesses.append(word.lower())
                 break
             else:
                 print(
