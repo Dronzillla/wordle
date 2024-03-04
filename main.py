@@ -1,6 +1,8 @@
 from colorama import init
 from termcolor import colored
 from random_words import RandomWords
+import re
+import enchant
 
 
 class WordleGame:
@@ -43,13 +45,32 @@ class WordleGame:
                             print(colored(letter_space, "white", "on_yellow"), end="")
                     # If letter is not in the word
                     else:
-                        print(colored(" - ", "white", "on_dark_grey"), end="")
+                        print(colored(letter_space, "white", "on_dark_grey"), end="")
             print("")
 
-    def get_user_input(self) -> str:
-        word = input(": ")
-        self.guesses.append(word)
-        return word
+    def get_user_input(self) -> None:
+        while True:
+            word = input(": ")
+            if self.__is_word_len5(word):
+                self.guesses.append(word)
+                break
+            else:
+                print(
+                    "ERROR. Enter 5 letter English word that contains only alphabetical letters. "
+                )
+
+    def __is_english_word(self, word: str) -> bool:
+        english_dict = enchant.Dict("en_US")
+        return english_dict.check(word)
+
+    def __is_word_len5(self, word: str) -> bool:
+        # Check if word is composed of 5 alphabetical chars
+        if re.search(r"^[A-Za-z]{5}$", word) == None:
+            return False
+        # Check if word is legit english word
+        if not self.__is_english_word(word.lower()):
+            return False
+        return True
 
     def guess_word(self) -> None: ...
 
@@ -57,6 +78,10 @@ class WordleGame:
 def main():
     game = WordleGame()
     game.show_grid()
+
+    for _ in range(6):
+        game.get_user_input()
+        game.show_grid()
 
 
 if __name__ == "__main__":
