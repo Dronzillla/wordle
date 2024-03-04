@@ -6,11 +6,11 @@ import enchant
 
 
 class WordleGame:
-
     def __init__(self):
         self.word = self.generate_word()
         print(self.word)
         self.guesses = []
+        self.game_won = False
 
     # Generate a random word that has a lenght of 5 chars
     def generate_word(self) -> str:
@@ -24,8 +24,9 @@ class WordleGame:
     def show_grid(self) -> None:
         columns = 5
         rows = 6
-
+        init()
         for r in range(rows):
+            correct = 0
             for c in range(columns):
                 # Check if user made a guess
                 try:
@@ -41,16 +42,23 @@ class WordleGame:
                         # Check if letter in in the same position as the word in guess
                         if letter == self.word[c]:
                             print(colored(letter_space, "white", "on_green"), end="")
+                            correct += 1
                         else:
                             print(colored(letter_space, "white", "on_yellow"), end="")
                     # If letter is not in the word
                     else:
                         print(colored(letter_space, "white", "on_dark_grey"), end="")
             print("")
+            # Check if user correctly guessed all 5 letters
+            if correct == 5:
+                self.game_won = True
+
+    def is_game_won(self) -> bool:
+        return self.game_won
 
     def get_user_input(self) -> None:
         while True:
-            word = input(": ")
+            word = input("English word: ")
             if self.__is_word_len5(word):
                 self.guesses.append(word)
                 break
@@ -72,7 +80,11 @@ class WordleGame:
             return False
         return True
 
-    def guess_word(self) -> None: ...
+    def print_result(self) -> None:
+        if self.game_won == False:
+            print(f"You Lost! Word to guess was '{self.word}'")
+        elif self.game_won == True:
+            print(f"You Win! Word to guess was '{self.word}'")
 
 
 def main():
@@ -82,6 +94,10 @@ def main():
     for _ in range(6):
         game.get_user_input()
         game.show_grid()
+        if game.is_game_won():
+            break
+
+    game.print_result()
 
 
 if __name__ == "__main__":
