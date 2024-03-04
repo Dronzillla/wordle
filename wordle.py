@@ -18,6 +18,8 @@ class WordleGame:
             word = rw.random_word(min_letter_count=5)
             if len(word) != 5:
                 continue
+            if not self.__is_english_word(word):
+                continue
             return word
 
     def show_grid(self) -> None:
